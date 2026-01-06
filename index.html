@@ -1,0 +1,157 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Stopwatch Web Application</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            height: 100vh;
+            background: linear-gradient(135deg, #141E30, #243B55);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.45);
+            padding: 30px;
+            width: 340px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        h1 {
+            margin: 5px 0;
+            font-size: 26px;
+        }
+
+        h2 {
+            margin: 5px 0 15px;
+            font-size: 16px;
+            font-weight: normal;
+            color: #ddd;
+        }
+
+        .info {
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        #display {
+            font-size: 2.4em;
+            margin: 15px 0;
+        }
+
+        button {
+            padding: 10px 14px;
+            margin: 5px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        .start { background-color: #2ecc71; }
+        .pause { background-color: #f1c40f; }
+        .reset { background-color: #e74c3c; }
+        .lap   { background-color: #3498db; }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            max-height: 120px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        li {
+            background: rgba(255,255,255,0.15);
+            padding: 6px;
+            margin: 4px 0;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        footer {
+            margin-top: 15px;
+            font-size: 13px;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Stopwatch</h1>
+    <h2>Web Application</h2>
+
+
+    <div id="display">00:00:00.000</div>
+
+    <button class="start" onclick="start()">Start</button>
+    <button class="pause" onclick="pause()">Pause</button>
+    <button class="reset" onclick="reset()">Reset</button>
+    <button class="lap" onclick="lap()">Lap</button>
+
+    <ul id="laps"></ul>
+
+    
+</div>
+
+<script>
+    let startTime = 0;
+    let elapsedTime = 0;
+    let timerInterval;
+
+    function formatTime(time) {
+        let ms = time % 1000;
+        let sec = Math.floor(time / 1000) % 60;
+        let min = Math.floor(time / (1000 * 60)) % 60;
+        let hr  = Math.floor(time / (1000 * 60 * 60));
+
+        return (
+            String(hr).padStart(2, '0') + ":" +
+            String(min).padStart(2, '0') + ":" +
+            String(sec).padStart(2, '0') + "." +
+            String(ms).padStart(3, '0')
+        );
+    }
+
+    function start() {
+        startTime = Date.now() - elapsedTime;
+        timerInterval = setInterval(() => {
+            elapsedTime = Date.now() - startTime;
+            document.getElementById("display").textContent = formatTime(elapsedTime);
+        }, 10);
+    }
+
+    function pause() {
+        clearInterval(timerInterval);
+    }
+
+    function reset() {
+        clearInterval(timerInterval);
+        elapsedTime = 0;
+        document.getElementById("display").textContent = "00:00:00.000";
+        document.getElementById("laps").innerHTML = "";
+    }
+
+    function lap() {
+        let li = document.createElement("li");
+        li.textContent = formatTime(elapsedTime);
+        document.getElementById("laps").appendChild(li);
+    }
+</script>
+
+</body>
+</html>
